@@ -69,6 +69,12 @@
     <ClCompile Include="Timing.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Unit.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameController.h">
@@ -123,6 +129,12 @@
       <Filter>Header Files\Core\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Timing.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Unit.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>

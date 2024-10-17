@@ -9,6 +9,7 @@ public:
 	Timing();
 	virtual ~Timing() { }
 
+	unsigned int GetGameTime() { return m_currentTime / 1000; }
 	unsigned int GetFPS() { return m_fpsLast; }
 	float GetDeltaTime() { return m_deltaTime; }
 

@@ -1,5 +1,6 @@
 #include "GameController.h"
 #include "SpriteSheet.h"
+#include "Level.h"
 #include "Timing.h"
 #include "TTFont.h"
 #include "SpriteAnim.h"
@@ -7,6 +8,7 @@
 
 GameController::GameController()
 {
+	srand(time(NULL));
 	m_sdlEvent = { };
 }
 
@@ -19,7 +21,9 @@ void GameController::RunGame()
 	AssetController::Instance().Initialize(10000000);
 	Renderer* r = &Renderer::Instance();
 	Timing* t = &Timing::Instance();
-	r->Initialize(800, 600);
+	Level* level = new Level(Color(128,128, 128, 255));
+	level->CreateUnits();
+	r->Initialize(1920, 1080);
 
 	TTFont* font = new TTFont();
 	font->Initialize(20);
@@ -58,19 +62,20 @@ void GameController::RunGame()
 		t->Tick();
 
 		SDL_PollEvent(&m_sdlEvent);
-		r->SetDrawColor(Color(255, 255, 255, 255));
+		r->SetDrawColor(level->getLvlColour());
 		r->ClearScreen();
-		r->RenderTexture(sheet, sheet->Update(EN_AN_IDLE, t->GetDeltaTime()), Rect(0, 0, 69 * 3, 44 * 3));
-		r->RenderTexture(sheet, sheet->Update(EN_AN_RUN, t->GetDeltaTime()), Rect(0, 150, 69 * 3, 150 + 44 * 3));
-		
-		string s = "Frame number: " + to_string(sheet->GetCurrentClip(EN_AN_IDLE));
-		font->Write(r->GetRenderer(), s.c_str(), SDL_Color{ 0, 255, 0 }, SDL_Point{ 250, 50 });
 
-		s = "Frame number: " + std::to_string(sheet->GetCurrentClip(EN_AN_RUN));
-		font->Write(r->GetRenderer(), s.c_str(), SDL_Color{ 0, 255, 0 }, SDL_Point{ 250, 200 });
+		for (int i = 0; i < level->GetUnits().size(); i++) 
+		{
+			r->RenderTexture(sheet, sheet->Update(EN_AN_IDLE, (t->GetDeltaTime() / level->GetUnits().size())), level->GetUnits()[i]->getPos()); //divide deltaTime by m_units size to prevent fast animation
+		}
+
 
 		string fps = "Frames per Second: " + to_string(t->GetFPS());
 		font->Write(r->GetRenderer(), fps.c_str(), SDL_Color{ 0, 0, 255 }, SDL_Point{ 0, 0 });
+
+		string gameTime = "Game Time: " + to_string(t->GetGameTime());
+		font->Write(r->GetRenderer(), gameTime.c_str(), SDL_Color{ 0, 0, 255 }, SDL_Point{ 250, 0 });
 
 		SDL_RenderPresent(r->GetRenderer());
 	}
