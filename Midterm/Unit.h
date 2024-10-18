@@ -14,7 +14,7 @@ public:
 
 	Rect getPos()
 	{
-		return Rect(m_xPos, m_yPos, BASE_SIZE * m_scale, (BASE_SIZE + m_scale) + m_yPos);
+		return Rect(m_xPos, m_yPos, (BASE_SIZE * m_scale) + m_xPos, (BASE_SIZE + m_scale) + m_yPos);
 	}
 
 	void setXPos(int _xPos) { m_xPos = _xPos; }
@@ -26,8 +26,11 @@ public:
 	void setScale(float _scale) { m_scale = _scale; }
 	float getAnimSpeed() { return m_animSpeed; }
 	void setAnimSpeed(float _animSpeed) { m_animSpeed = _animSpeed; }
+	string getGuid() { return m_texture_guid; }
+	void setGuid(string _guid) { m_texture_guid = _guid; }
+	
+	void Move(int xSpeed, int ySpeed);
 
-	virtual void Move() override;
 	virtual void Serialize(ostream& _stream) override;
 	virtual void Deserialize(istream& _stream) override;
 	virtual void AssignNonDefaultValues() override;
@@ -37,6 +40,7 @@ public:
 
 private:
 
+	string m_texture_guid;
 	int m_xPos;
 	int m_yPos;
 	int m_runSpeed;

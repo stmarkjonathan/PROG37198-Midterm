@@ -20,7 +20,7 @@ void Level::Clear()
 	delete Unit::Pool;
 }
 
-void Level::CreateUnits()
+void Level::CreateWarriors()
 {
 	int yOffset = 0;
 	for (int count = 0; count < 10; count++)
@@ -31,6 +31,7 @@ void Level::CreateUnits()
 		unit->setScale(1.8);
 		unit->setRunSpeed(rand() % 21 + 80);
 		unit->setAnimSpeed(float((rand() % 13 + 48))/10.0);
+		unit->setGuid("../Assets/Textures/Warrior.tga");
 		m_units.push_back(unit);
 		unit->ToString();
 		yOffset += 100;

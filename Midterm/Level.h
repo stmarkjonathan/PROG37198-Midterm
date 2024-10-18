@@ -14,7 +14,7 @@ public:
 	vector<Unit*> GetUnits() { return m_units; }
 
 	void Clear();
-	void CreateUnits();
+	void CreateWarriors();
 	void Serialize(ostream& _stream) override;
 	void Deserialize(istream& _stream) override;
 	void ToString() override;

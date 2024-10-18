@@ -22,7 +22,7 @@ void GameController::RunGame()
 	Renderer* r = &Renderer::Instance();
 	Timing* t = &Timing::Instance();
 	Level* level = new Level(Color(128,128, 128, 255));
-	level->CreateUnits();
+	level->CreateWarriors();
 	r->Initialize(1920, 1080);
 
 	TTFont* font = new TTFont();
@@ -33,14 +33,21 @@ void GameController::RunGame()
 	SpriteSheet::Pool = new ObjectPool<SpriteSheet>();
 	SpriteAnim::Pool = new ObjectPool<SpriteAnim>();
 	SpriteSheet* sheet = SpriteSheet::Pool->GetResource();
-	sheet->Load("../Assets/Textures/Warrior.tga");
+	
+	for (auto const& x : level->GetUnits())
+	{
+		sheet->Load(x->getGuid());
+	}
+
 	sheet->SetSize(17, 6, 69, 44);
 	sheet->AddAnimation(EN_AN_IDLE, 0, 6, 6.0f);
 	sheet->AddAnimation(EN_AN_RUN, 6, 8, 6.0f);
 
-	ofstream writeStream("resource.bin", ios::out | ios::binary);
+	//serializing
+
+	/*ofstream writeStream("resource.bin", ios::out | ios::binary);
 	sheet->Serialize(writeStream);
-	writeStream.close();
+	writeStream.close();*/
 
 	//deserializing
 
@@ -68,6 +75,7 @@ void GameController::RunGame()
 		for (int i = 0; i < level->GetUnits().size(); i++) 
 		{
 			r->RenderTexture(sheet, sheet->Update(EN_AN_IDLE, (t->GetDeltaTime() / level->GetUnits().size())), level->GetUnits()[i]->getPos()); //divide deltaTime by m_units size to prevent fast animation
+			level->GetUnits()[i]->Move(5, 0);
 		}
 
 

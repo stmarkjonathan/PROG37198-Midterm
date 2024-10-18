@@ -11,7 +11,6 @@ public:
 	Resource();
 	virtual ~Resource();
 
-	virtual void Move() = 0;
 	virtual void Serialize(ostream& _stream);
 	virtual void Deserialize(istream& _stream);
 	virtual void AssignNonDefaultValues();

@@ -4,6 +4,7 @@ ObjectPool<Unit>* Unit::Pool = nullptr;
 
 Unit::Unit()
 {
+	m_texture_guid = "";
 	m_xPos = 0;
 	m_yPos = 0;
 	m_runSpeed = 0;
@@ -16,7 +17,10 @@ Unit::~Unit()
 	delete Unit::Pool;
 }
 
-
+void Unit::Move(int xSpeed, int ySpeed)
+{
+	m_xPos += xSpeed;
+}
 
 void Unit::AssignNonDefaultValues()
 {
