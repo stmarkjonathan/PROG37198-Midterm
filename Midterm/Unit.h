@@ -27,6 +27,7 @@ public:
 	float getAnimSpeed() { return m_animSpeed; }
 	void setAnimSpeed(float _animSpeed) { m_animSpeed = _animSpeed; }
 
+	virtual void Move() override;
 	virtual void Serialize(ostream& _stream) override;
 	virtual void Deserialize(istream& _stream) override;
 	virtual void AssignNonDefaultValues() override;

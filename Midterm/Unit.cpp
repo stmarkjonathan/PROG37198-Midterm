@@ -13,7 +13,10 @@ Unit::Unit()
 
 Unit::~Unit()
 {
+	delete Unit::Pool;
 }
+
+
 
 void Unit::AssignNonDefaultValues()
 {
