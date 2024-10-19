@@ -127,6 +127,14 @@ void Level::Deserialize(istream& _stream)
 		m_units.push_back(unit);
 	}
 
+	int numberOfRocks;
+	_stream.read(reinterpret_cast<char*>(&numberOfRocks), sizeof(numberOfRocks));
+	for (int count = 0; count < numberOfRocks; count++) {
+		Unit* unit;
+		m_rocks.push_back(unit);
+	}
+
+
 	Resource::Deserialize(_stream);
 }
 
