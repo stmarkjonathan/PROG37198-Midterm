@@ -97,6 +97,13 @@ void Level::Serialize(ostream& _stream)
 	{
 		SerializePointer(_stream, m_units[count]);
 	}
+	
+	int numberOfRocks = m_rocks.size();
+	_stream.write(reinterpret_cast<char*>(&numberOfRocks), sizeof(numberOfRocks));
+	for (int count = 0; count < numberOfUnits; count++) 
+	{
+		SerializePointer(_stream, m_rocks[count]);
+	}
 
 	Resource::Serialize(_stream);
 }
