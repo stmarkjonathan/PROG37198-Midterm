@@ -17,6 +17,7 @@ Level::~Level()
 void Level::Clear()
 {
 	m_units.clear();
+	m_rocks.clear();
 	delete Unit::Pool;
 }
 
@@ -29,12 +30,43 @@ void Level::CreateWarriors()
 		unit->setXPos(0);
 		unit->setYPos(10 + yOffset);
 		unit->setScale(1.8);
-		unit->setRunSpeed(rand() % 21 + 80);
+		unit->setXSpeed(rand() % 21 + 80);
 		unit->setAnimSpeed(float((rand() % 13 + 48))/10.0);
 		unit->setGuid("../Assets/Textures/Warrior.tga");
 		m_units.push_back(unit);
 		unit->ToString();
 		yOffset += 100;
+	}
+}
+
+void Level::CreateRocks()
+{
+	int xOffset = 0;
+	for (int count = 0; count < 10; count++)
+	{
+		Unit* unit = Unit::Pool->GetResource();
+		unit->setXPos(50 + xOffset);
+		unit->setYPos(0);
+		unit->setScale(1.0);
+		unit->setYSpeed(rand() % 21 + 80);
+		unit->setAnimSpeed(float((rand() % 13 + 48)) / 10.0);
+		unit->setGuid("../Assets/Textures/Rock.tga");
+		m_rocks.push_back(unit);
+		unit->ToString();
+		xOffset += 100;
+	}
+}
+
+void Level::RunLevelLogic(Renderer* _r, SpriteSheet* sheet, SpriteSheet* rockSheet, Timing* t)
+{
+	for (int i = 0; i < m_units.size(); i++)
+	{
+		_r->RenderTexture(sheet, sheet->Update(EN_AN_RUN, (t->GetDeltaTime() / m_units.size())), m_units[i]->getPos());
+		m_units[i]->MoveX(t->GetDeltaTime());
+
+		//seperate this section into its own function for level 2
+		_r->RenderTexture(rockSheet, rockSheet->Update(EN_AN_ROCK, (t->GetDeltaTime() / m_rocks.size())), m_rocks[i]->getPos());
+		m_rocks[i]->MoveY(t->GetDeltaTime());
 	}
 }
 

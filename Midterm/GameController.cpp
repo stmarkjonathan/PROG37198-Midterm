@@ -18,51 +18,49 @@ GameController::~GameController()
 
 void GameController::RunGame()
 {
+
+	//initializing 
 	AssetController::Instance().Initialize(10000000);
 	Renderer* r = &Renderer::Instance();
 	Timing* t = &Timing::Instance();
 	Level* level = new Level(Color(128,128, 128, 255));
+
+	//loads warriors + rocks and initializes their values
 	level->CreateWarriors();
+	level->CreateRocks();
+
+	//sets window size to 1920x1080
 	r->Initialize(1920, 1080);
 
 	TTFont* font = new TTFont();
 	font->Initialize(20);
 
-	Point ws = r->GetWindowSize();
-
 	SpriteSheet::Pool = new ObjectPool<SpriteSheet>();
 	SpriteAnim::Pool = new ObjectPool<SpriteAnim>();
 	SpriteSheet* sheet = SpriteSheet::Pool->GetResource();
+	SpriteSheet* rockSheet = SpriteSheet::Pool->GetResource();
 	
+	//goes through each unit in level's m_units
+	//loads the texture according to m_guid member in each unit
 	for (auto const& x : level->GetUnits())
 	{
-		sheet->Load(x->getGuid());
+		sheet->Load(x->getGuid());	
+	}
+
+	//same thing for rocks
+	for (auto const& x : level->GetRocks())
+	{
+		rockSheet->Load(x->getGuid());
 	}
 
 	sheet->SetSize(17, 6, 69, 44);
-	sheet->AddAnimation(EN_AN_IDLE, 0, 6, 6.0f);
 	sheet->AddAnimation(EN_AN_RUN, 6, 8, 6.0f);
 
-	//serializing
+	rockSheet->SetSize(1, 4, 19, 20);
+	rockSheet->AddAnimation(EN_AN_ROCK, 0, 4, 6.0f);
 
-	/*ofstream writeStream("resource.bin", ios::out | ios::binary);
-	sheet->Serialize(writeStream);
-	writeStream.close();*/
-
-	//deserializing
-
-	/*delete SpriteAnim::Pool;
-	delete SpriteSheet::Pool;
-	AssetController::Instance().Clear();
-	AssetController::Instance().Initialize(10000000);
-	SpriteSheet::Pool = new ObjectPool<SpriteSheet>();
-	SpriteAnim::Pool = new ObjectPool<SpriteAnim>();
-
-	SpriteSheet* sheet2 = SpriteSheet::Pool->GetResource();
-	ifstream readStream("resource.bin", ios::in | ios::binary);
-	sheet2->Deserialize(readStream);
-	readStream.close();*/
-
+	//main game loop, runs every frame
+	//if 60 frames per second, runs 60 times a second
 	while (m_sdlEvent.type != SDL_QUIT)
 	{
 
@@ -72,12 +70,13 @@ void GameController::RunGame()
 		r->SetDrawColor(level->getLvlColour());
 		r->ClearScreen();
 
-		for (int i = 0; i < level->GetUnits().size(); i++) 
-		{
-			r->RenderTexture(sheet, sheet->Update(EN_AN_IDLE, (t->GetDeltaTime() / level->GetUnits().size())), level->GetUnits()[i]->getPos()); //divide deltaTime by m_units size to prevent fast animation
-			level->GetUnits()[i]->Move(5, 0);
-		}
 
+		//currently there is only 1 level
+		//level spawns warriors and rocks
+		//somehow find a way to start with level 1 (only warriors) then switch to level 2 (warriors + rocks) according to a condition
+		level->RunLevelLogic(r, sheet,rockSheet, t);
+
+		
 
 		string fps = "Frames per Second: " + to_string(t->GetFPS());
 		font->Write(r->GetRenderer(), fps.c_str(), SDL_Color{ 0, 0, 255 }, SDL_Point{ 0, 0 });

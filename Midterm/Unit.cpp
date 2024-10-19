@@ -7,7 +7,8 @@ Unit::Unit()
 	m_texture_guid = "";
 	m_xPos = 0;
 	m_yPos = 0;
-	m_runSpeed = 0;
+	m_xSpeed = 0;
+	m_ySpeed = 0;
 	m_scale = 0.0;
 	m_animSpeed = 0.0;
 }
@@ -17,9 +18,14 @@ Unit::~Unit()
 	delete Unit::Pool;
 }
 
-void Unit::Move(int xSpeed, int ySpeed)
+void Unit::MoveX(float _deltaTime)
 {
-	m_xPos += xSpeed;
+	m_xPos += m_xSpeed * _deltaTime;
+}
+
+void Unit::MoveY(float _deltaTime)
+{
+	m_yPos += m_ySpeed * _deltaTime;
 }
 
 void Unit::AssignNonDefaultValues()
@@ -41,7 +47,7 @@ void Unit::Deserialize(istream& _stream)
 void Unit::ToString()
 {
 	cout << "UNIT" << endl;
-	cout << "RUNSPEED: " << m_runSpeed << endl;
+	cout << "RUNSPEED: " << m_xSpeed << endl;
 	cout << "ANIM_SPEED: " << m_animSpeed << endl;
 	Resource::ToString();
 }
