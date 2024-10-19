@@ -16,6 +16,9 @@ public:
 	{
 		return Rect(m_xPos, m_yPos, (BASE_SIZE * m_scale) + m_xPos, (BASE_SIZE + m_scale) + m_yPos);
 	}
+	static bool checkCollision(const Rect& a, const Rect& b) {
+		return (a.X1 < b.X2 && a.X2 > b.X1 && a.Y1 < b.Y2 && a.Y2 > b.Y1);
+	}
 
 	void setXPos(float _xPos) { m_xPos = _xPos; }
 	void setYPos(float _yPos) { m_yPos = _yPos; }

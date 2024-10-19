@@ -57,16 +57,41 @@ void Level::CreateRocks()
 	}
 }
 
-void Level::RunLevelLogic(Renderer* _r, SpriteSheet* sheet, SpriteSheet* rockSheet, Timing* t)
+void Level::RunLevel2Logic(Renderer* _r, SpriteSheet* sheet, SpriteSheet* rockSheet, Timing* t)
 {
 	for (int i = 0; i < m_units.size(); i++)
 	{
 		_r->RenderTexture(sheet, sheet->Update(EN_AN_RUN, (t->GetDeltaTime() / m_units.size())), m_units[i]->getPos());
 		m_units[i]->Move(t->GetDeltaTime());
+		//checking for rock collisions
+		for (int j = 0; j < m_rocks.size(); j++) {
+			Rect warriorRect = m_units[i]->getPos();
+			Rect rockRect = m_rocks[j]->getPos();
 
-		//seperate rock section for level 2
+			if (checkCollision(warriorRect, rockRect)) {
+				std::cout << "Collision detected!" << std::endl;
+				_r->RenderTexture(sheet, sheet->Update(EN_AN_DEATH, (t->GetDeltaTime() / m_units.size())), m_units[i]->getPos());
+			}
+		}
+		
+		// rock section for level 2
 		_r->RenderTexture(rockSheet, rockSheet->Update(EN_AN_ROCK, (t->GetDeltaTime() / m_rocks.size())), m_rocks[i]->getPos());
 		m_rocks[i]->Move(t->GetDeltaTime());
+
+		
+	}
+}
+void Level::RunLevel1Logic(Renderer* _r, SpriteSheet* sheet, Timing* t)
+{
+		for (int i = 0; i < m_units.size(); i++)
+	{
+		_r->RenderTexture(sheet, sheet->Update(EN_AN_RUN, (t->GetDeltaTime() / m_units.size())), m_units[i]->getPos());
+		m_units[i]->Move(t->GetDeltaTime());
+
+		
+		////seperate rock section for level 2
+		//_r->RenderTexture(rockSheet, rockSheet->Update(EN_AN_ROCK, (t->GetDeltaTime() / m_rocks.size())), m_rocks[i]->getPos());
+		//m_rocks[i]->Move(t->GetDeltaTime());
 	}
 }
 
