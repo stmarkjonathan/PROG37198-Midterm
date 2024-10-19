@@ -35,8 +35,7 @@ public:
 	string getGuid() { return m_texture_guid; }
 	void setGuid(string _guid) { m_texture_guid = _guid; }
 	
-	void MoveX(float _deltaTime);
-	void MoveY(float _deltaTime);
+	void Move(float _deltaTime);
 
 	virtual void Serialize(ostream& _stream) override;
 	virtual void Deserialize(istream& _stream) override;

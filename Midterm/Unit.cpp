@@ -18,13 +18,9 @@ Unit::~Unit()
 	delete Unit::Pool;
 }
 
-void Unit::MoveX(float _deltaTime)
+void Unit::Move(float _deltaTime)
 {
 	m_xPos += m_xSpeed * _deltaTime;
-}
-
-void Unit::MoveY(float _deltaTime)
-{
 	m_yPos += m_ySpeed * _deltaTime;
 }
 

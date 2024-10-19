@@ -62,11 +62,11 @@ void Level::RunLevelLogic(Renderer* _r, SpriteSheet* sheet, SpriteSheet* rockShe
 	for (int i = 0; i < m_units.size(); i++)
 	{
 		_r->RenderTexture(sheet, sheet->Update(EN_AN_RUN, (t->GetDeltaTime() / m_units.size())), m_units[i]->getPos());
-		m_units[i]->MoveX(t->GetDeltaTime());
+		m_units[i]->Move(t->GetDeltaTime());
 
-		//seperate this section into its own function for level 2
+		//seperate rock section for level 2
 		_r->RenderTexture(rockSheet, rockSheet->Update(EN_AN_ROCK, (t->GetDeltaTime() / m_rocks.size())), m_rocks[i]->getPos());
-		m_rocks[i]->MoveY(t->GetDeltaTime());
+		m_rocks[i]->Move(t->GetDeltaTime());
 	}
 }
 
