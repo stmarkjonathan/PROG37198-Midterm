@@ -59,11 +59,14 @@ void Level::CreateRocks()
 
 void Level::RunLevel2Logic(Renderer* _r, SpriteSheet* sheet, SpriteSheet* rockSheet, Timing* t)
 {
+	bool anyWarriorsAlive = false;
 	for (int i = 0; i < m_units.size(); i++)
 	{	
 		Unit* unit = m_units[i];
 		if (unit->IsAlive()) {// Only move if alive
 			// Render the running animation
+			
+			//anyWarriorsAlive = true;
 			_r->RenderTexture(sheet, sheet->Update(EN_AN_RUN, (t->GetDeltaTime() / m_units.size())), unit->getPos());
 			unit->Move(t->GetDeltaTime()); 
 
@@ -85,15 +88,30 @@ void Level::RunLevel2Logic(Renderer* _r, SpriteSheet* sheet, SpriteSheet* rockSh
 				_r->RenderTexture(sheet, sheet->Update(EN_AN_DEATH, (t->GetDeltaTime() / m_units.size())), unit->getPos());
 				//	//cout << sheet->GetCurrentClip(EN_AN_DEATH) << endl;
 
-				if (sheet->GetCurrentClip(EN_AN_DEATH) == 36) {
+				if (sheet->GetCurrentClip(EN_AN_DEATH) == 36 && !unit->IsAlive()) {
 					unit->MarkDeathAnimationComplete();
 					//cout << "warior deat complte" << endl;
-					m_units.erase(m_units.begin() + i);
+					//m_units.erase(m_units.begin() + i);
 				}
 			}
 			
 		}
+		// Check if the warrior is off-screen
+		if (unit->getPos().X1 > 1920) { // Assuming SCREEN_HEIGHT is the height of your window
+			std::cout << "A warrior has disappeared off-screen!" << std::endl;
+			exit(0); // Exit the application
+		}
+		//// Check if all warriors are dead
+		//if (!anyWarriorsAlive) {
+		//	std::cout << "All warriors are dead!" << std::endl;
+		//	exit(0); // Exit the application
+		//}
+		/*for (int i = 0; i < m_units.size(); i++) {
+			anyWarriorsAlive = m_units[i]->IsAlive();
+
+		}*/
 		
+
 		
 		//// rock section for level 2
 		_r->RenderTexture(rockSheet, rockSheet->Update(EN_AN_ROCK, (t->GetDeltaTime() / m_rocks.size())), m_rocks[i]->getPos());
@@ -101,11 +119,7 @@ void Level::RunLevel2Logic(Renderer* _r, SpriteSheet* sheet, SpriteSheet* rockSh
 
 		
 	}
-	// Rock rendering and movement logic
-	/*for (int i = 0; i < m_rocks.size(); i++) {
-		_r->RenderTexture(rockSheet, rockSheet->Update(EN_AN_ROCK, (t->GetDeltaTime() / m_rocks.size())), m_rocks[i]->getPos());
-		m_rocks[i]->Move(t->GetDeltaTime());
-	}*/
+	
 }
 void Level::RunLevel1Logic(Renderer* _r, SpriteSheet* sheet, Timing* t)
 {

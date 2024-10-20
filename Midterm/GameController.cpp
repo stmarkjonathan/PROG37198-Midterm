@@ -65,7 +65,7 @@ void GameController::RunGame()
 	}
 	sheet->SetSize(17, 6, 69, 44);
 	sheet->AddAnimation(EN_AN_RUN, 6, 8, 6.0f);
-	sheet->AddAnimation(EN_AN_DEATH, 26, 11, 4.0f);
+	sheet->AddAnimation(EN_AN_DEATH, 26, 11, 6.0f);
 
 	rockSheet->SetSize(1, 4, 19, 20);
 	rockSheet->AddAnimation(EN_AN_ROCK, 0, 4, 6.0f);
@@ -96,6 +96,7 @@ void GameController::RunGame()
 			r->SetDrawColor(level2->getLvlColour());
 			r->ClearScreen();
 			level2->RunLevel2Logic(r, sheet, rockSheet, t);
+
 		}
 		//if (isLevel1 && level->GetUnits().front()->getPos().X2 > 1920) { //doesn't work 100 % of the time
 		//	isLevel1 = false;
