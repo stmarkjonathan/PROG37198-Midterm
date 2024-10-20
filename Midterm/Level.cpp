@@ -31,7 +31,7 @@ void Level::CreateWarriors()
 		unit->setYPos(10 + yOffset);
 		unit->setScale(1.8);
 		unit->setXSpeed(rand() % 21 + 80);
-		unit->setAnimSpeed(float((rand() % 13 + 48))/10.0);
+		unit->setAnimSpeed(float((rand() % 13 + 48)) / 10.0);
 		unit->setGuid("../Assets/Textures/Warrior.tga");
 		m_units.push_back(unit);
 		unit->ToString();
@@ -57,16 +57,81 @@ void Level::CreateRocks()
 	}
 }
 
-void Level::RunLevelLogic(Renderer* _r, SpriteSheet* sheet, SpriteSheet* rockSheet, Timing* t)
+void Level::RunLevel2Logic(Renderer* _r, SpriteSheet* sheet, SpriteSheet* rockSheet, Timing* t)
+{
+	bool anyWarriorsAlive = false;
+	for (int i = 0; i < m_units.size(); i++)
+	{
+		Unit* unit = m_units[i];
+		if (unit->IsAlive()) {// Only move if alive
+			// Render the running animation
+
+			//anyWarriorsAlive = true;
+			_r->RenderTexture(sheet, sheet->Update(EN_AN_RUN, (t->GetDeltaTime() / m_units.size())), unit->getPos());
+			unit->Move(t->GetDeltaTime());
+
+			// Check for rock collisions
+			for (int j = 0; j < m_rocks.size(); j++) {
+				Rect warriorRect = unit->getPos();
+				Rect rockRect = m_rocks[j]->getPos();
+
+				if (checkCollision(warriorRect, rockRect)) {
+					//std::cout << "Collision detected!" << std::endl;
+					unit->Die(); // Mark the unit as dead
+					_r->RenderTexture(sheet, sheet->Update(EN_AN_DEATH, (t->GetDeltaTime() / m_units.size())), unit->getPos());
+
+				}
+			}
+		}
+		else {
+			if (!unit->IsDeathAnimationComplete()) {
+				_r->RenderTexture(sheet, sheet->Update(EN_AN_DEATH, (t->GetDeltaTime() / m_units.size())), unit->getPos());
+				//	//cout << sheet->GetCurrentClip(EN_AN_DEATH) << endl;
+
+				if (sheet->GetCurrentClip(EN_AN_DEATH) == 36 && !unit->IsAlive()) {
+					unit->MarkDeathAnimationComplete();
+					//cout << "warior deat complte" << endl;
+					//m_units.erase(m_units.begin() + i);
+				}
+			}
+
+		}
+		// Check if the warrior is off-screen
+		if (unit->getPos().X1 > 1920) { // Assuming SCREEN_HEIGHT is the height of your window
+			std::cout << "A warrior has disappeared off-screen!" << std::endl;
+			exit(0); // Exit the application
+		}
+		//// Check if all warriors are dead
+		//if (!anyWarriorsAlive) {
+		//	std::cout << "All warriors are dead!" << std::endl;
+		//	exit(0); // Exit the application
+		//}
+		/*for (int i = 0; i < m_units.size(); i++) {
+			anyWarriorsAlive = m_units[i]->IsAlive();
+
+		}*/
+
+
+
+		//// rock section for level 2
+		_r->RenderTexture(rockSheet, rockSheet->Update(EN_AN_ROCK, (t->GetDeltaTime() / m_rocks.size())), m_rocks[i]->getPos());
+		m_rocks[i]->Move(t->GetDeltaTime());
+
+
+	}
+
+}
+void Level::RunLevel1Logic(Renderer* _r, SpriteSheet* sheet, Timing* t)
 {
 	for (int i = 0; i < m_units.size(); i++)
 	{
 		_r->RenderTexture(sheet, sheet->Update(EN_AN_RUN, (t->GetDeltaTime() / m_units.size())), m_units[i]->getPos());
 		m_units[i]->Move(t->GetDeltaTime());
 
-		//seperate rock section for level 2
-		_r->RenderTexture(rockSheet, rockSheet->Update(EN_AN_ROCK, (t->GetDeltaTime() / m_rocks.size())), m_rocks[i]->getPos());
-		m_rocks[i]->Move(t->GetDeltaTime());
+
+		////seperate rock section for level 2
+		//_r->RenderTexture(rockSheet, rockSheet->Update(EN_AN_ROCK, (t->GetDeltaTime() / m_rocks.size())), m_rocks[i]->getPos());
+		//m_rocks[i]->Move(t->GetDeltaTime());
 	}
 }
 
@@ -97,13 +162,6 @@ void Level::Serialize(ostream& _stream)
 	{
 		SerializePointer(_stream, m_units[count]);
 	}
-	
-	int numberOfRocks = m_rocks.size();
-	_stream.write(reinterpret_cast<char*>(&numberOfRocks), sizeof(numberOfRocks));
-	for (int count = 0; count < numberOfUnits; count++) 
-	{
-		SerializePointer(_stream, m_rocks[count]);
-	}
 
 	Resource::Serialize(_stream);
 }
@@ -117,7 +175,7 @@ void Level::Deserialize(istream& _stream)
 	_stream.read(reinterpret_cast<char*>(&m_colour_G), sizeof(m_colour_G));
 	_stream.read(reinterpret_cast<char*>(&m_colour_B), sizeof(m_colour_B));
 	_stream.read(reinterpret_cast<char*>(&m_colour_A), sizeof(m_colour_A));
-	
+
 	int numberOfUnits;
 	_stream.read(reinterpret_cast<char*>(&numberOfUnits), sizeof(numberOfUnits));
 	for (int count = 0; count < numberOfUnits; count++)
@@ -126,14 +184,6 @@ void Level::Deserialize(istream& _stream)
 		DeserializePointer(_stream, unit);
 		m_units.push_back(unit);
 	}
-
-	int numberOfRocks;
-	_stream.read(reinterpret_cast<char*>(&numberOfRocks), sizeof(numberOfRocks));
-	for (int count = 0; count < numberOfRocks; count++) {
-		Unit* unit;
-		m_rocks.push_back(unit);
-	}
-
 
 	Resource::Deserialize(_stream);
 }

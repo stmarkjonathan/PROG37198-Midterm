@@ -12,6 +12,15 @@ class Level : public Resource
 public:
 	Level(Color _color);
 	virtual ~Level();
+	bool checkCollision(const Rect& rectA, const Rect& rectB) {
+		// Check if the rectangles overlap
+		return (rectA.X1 < rectB.X2 && rectA.X2 > rectB.X1 &&
+			rectA.Y1 < rectB.Y2 && rectA.Y2 > rectB.Y1);
+	}
+	bool checkTouching(const Rect& rectA, const Rect& rectB) {
+		return (rectA.X1 <= rectB.X2 && rectA.X2 >= rectB.X1 &&
+			rectA.Y1 <= rectB.Y2 && rectA.Y2 >= rectB.Y1);
+	}
 
 	Color getLvlColour() { return Color(m_colour_R, m_colour_G, m_colour_B, m_colour_A); }
 	vector<Unit*> GetUnits() { return m_units; }
@@ -20,7 +29,8 @@ public:
 	void Clear();
 	void CreateWarriors();
 	void CreateRocks();
-	void RunLevelLogic(Renderer* _r, SpriteSheet* sheet, SpriteSheet* rockSheet, Timing* t);
+	void RunLevel2Logic(Renderer* _r, SpriteSheet* sheet, SpriteSheet* rockSheet, Timing* t);
+	void RunLevel1Logic(Renderer* _r, SpriteSheet* sheet, Timing* t);
 	void Serialize(ostream& _stream) override;
 	void Deserialize(istream& _stream) override;
 	void ToString() override;

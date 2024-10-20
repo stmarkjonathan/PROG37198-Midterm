@@ -16,6 +16,19 @@ public:
 	{
 		return Rect(m_xPos, m_yPos, (BASE_SIZE * m_scale) + m_xPos, (BASE_SIZE + m_scale) + m_yPos);
 	}
+	static bool checkCollision(const Rect& a, const Rect& b) {
+		return (a.X1 < b.X2 && a.X2 > b.X1 && a.Y1 < b.Y2 && a.Y2 > b.Y1);
+	}
+
+	void Die() {
+		m_isAlive = false; // Mark the unit as dead
+	}
+
+	bool IsAlive() const {
+		return m_isAlive;
+	}
+
+
 
 	void setXPos(float _xPos) { m_xPos = _xPos; }
 	void setYPos(float _yPos) { m_yPos = _yPos; }
@@ -34,7 +47,7 @@ public:
 
 	string getGuid() { return m_texture_guid; }
 	void setGuid(string _guid) { m_texture_guid = _guid; }
-	
+
 	void Move(float _deltaTime);
 
 	virtual void Serialize(ostream& _stream) override;
@@ -43,9 +56,17 @@ public:
 	virtual void ToString() override;
 
 	static ObjectPool<Unit>* Pool;
+	bool IsDeathAnimationComplete() const {
+		return m_isDeathAnimationComplete;
+	}
+	void MarkDeathAnimationComplete() {
+		m_isDeathAnimationComplete = true;
+	}
 
 private:
-
+	bool m_isAlive = true;
+	bool m_inDeathAnimation = false;
+	bool m_isDeathAnimationComplete = false;
 	string m_texture_guid;
 	float m_xPos;
 	float m_yPos;

@@ -20,13 +20,17 @@ Unit::~Unit()
 
 void Unit::Move(float _deltaTime)
 {
-	m_xPos += m_xSpeed * _deltaTime;
-	m_yPos += m_ySpeed * _deltaTime;
+	if (m_isAlive) {//only allowign aliv eobjects to move
+		m_xPos += m_xSpeed * _deltaTime;
+		m_yPos += m_ySpeed * _deltaTime;
+	}
+	//m_xPos += m_xSpeed * _deltaTime;
+	//m_yPos += m_ySpeed * _deltaTime;
 }
 
 void Unit::AssignNonDefaultValues()
 {
-	
+
 	Resource::AssignNonDefaultValues();
 }
 
