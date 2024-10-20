@@ -72,7 +72,7 @@ void GameController::RunGame()
 	//auto - save the level state after 5 seconds as Level1.bin, immediately load the auto - saved
 	//	level(Level1.bin) and continue level execution
 	bool hasAutoSaved = false;
-	bool isLevel1 = false;
+	bool isLevel1 = true;
 	//main game loop, runs every frame
 	//if 60 frames per second, runs 60 times a second
 	while (m_sdlEvent.type != SDL_QUIT)

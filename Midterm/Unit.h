@@ -56,10 +56,17 @@ public:
 	virtual void ToString() override;
 
 	static ObjectPool<Unit>* Pool;
+	bool IsDeathAnimationComplete() const {
+		return m_isDeathAnimationComplete;
+	}
+	void MarkDeathAnimationComplete() {
+		m_isDeathAnimationComplete = true;
+	}
 
 private:
 	bool m_isAlive = true;
 	bool m_inDeathAnimation = false;
+	bool m_isDeathAnimationComplete = false;
 	string m_texture_guid;
 	float m_xPos;
 	float m_yPos;
