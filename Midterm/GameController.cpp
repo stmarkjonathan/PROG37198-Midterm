@@ -78,6 +78,7 @@ void GameController::RunGame()
 		//somehow find a way to start with level 1 (only warriors) then switch to level 2 (warriors + rocks) according to a condition
 		level->RunLevelLogic(r, sheet,rockSheet, t);
 
+		//Autosave by serializing level
 		if (t->GetGameTime() == 5000)
 		{
 			level->Serialize(stream);
