@@ -60,26 +60,61 @@ void Level::CreateRocks()
 void Level::RunLevel2Logic(Renderer* _r, SpriteSheet* sheet, SpriteSheet* rockSheet, Timing* t)
 {
 	for (int i = 0; i < m_units.size(); i++)
-	{
-		_r->RenderTexture(sheet, sheet->Update(EN_AN_RUN, (t->GetDeltaTime() / m_units.size())), m_units[i]->getPos());
-		m_units[i]->Move(t->GetDeltaTime());
-		//checking for rock collisions
-		for (int j = 0; j < m_rocks.size(); j++) {
-			Rect warriorRect = m_units[i]->getPos();
-			Rect rockRect = m_rocks[j]->getPos();
+	{	
+		Unit* unit = m_units[i];
+		if (unit->IsAlive()) {
+			// Render the running animation
+			_r->RenderTexture(sheet, sheet->Update(EN_AN_RUN, (t->GetDeltaTime() / m_units.size())), unit->getPos());
+			unit->Move(t->GetDeltaTime()); // Only move if alive
 
-			if (checkCollision(warriorRect, rockRect)) {
-				std::cout << "Collision detected!" << std::endl;
-				_r->RenderTexture(sheet, sheet->Update(EN_AN_DEATH, (t->GetDeltaTime() / m_units.size())), m_units[i]->getPos());
+			// Check for rock collisions
+			for (int j = 0; j < m_rocks.size(); j++) {
+				Rect warriorRect = m_units[i]->getPos();
+				Rect rockRect = m_rocks[j]->getPos();
+
+				if (checkCollision(warriorRect, rockRect)) {
+					std::cout << "Collision detected!" << std::endl;
+					unit->Die(); // Mark the unit as dead
+					_r->RenderTexture(sheet, sheet->Update(EN_AN_DEATH, (t->GetDeltaTime() / m_units.size())), unit->getPos());
+					//m_rocks.erase(m_rocks.begin() + j); // Remove the collided rock
+					//j--; // Adjust index since we've removed a rock
+				}
 			}
 		}
+		else {
+			// If the unit is dead, render the death animation only once
+			_r->RenderTexture(sheet, sheet->Update(EN_AN_DEATH, (t->GetDeltaTime() / m_units.size())), unit->getPos());
+		}
 		
-		// rock section for level 2
+
+		//_r->RenderTexture(sheet, sheet->Update(EN_AN_RUN, (t->GetDeltaTime() / m_units.size())), m_units[i]->getPos());
+		//m_units[i]->Move(t->GetDeltaTime());
+		////checking for rock collisions
+		//for (int j = 0; j < m_rocks.size(); j++) {
+		//	Rect warriorRect = m_units[i]->getPos();
+		//	Rect rockRect = m_rocks[j]->getPos();
+
+		//	if (checkCollision(warriorRect, rockRect)) {
+		//		std::cout << "Collision detected!" << std::endl;
+		//		//sheet->Update(EN_AN_DEATH, t->GetDeltaTime());
+		//		_r->RenderTexture(sheet, sheet->Update(EN_AN_DEATH, (t->GetDeltaTime() / m_units.size())), m_units[i]->getPos());
+		//		
+		//		
+		//	}
+		//}
+
+		
+		//// rock section for level 2
 		_r->RenderTexture(rockSheet, rockSheet->Update(EN_AN_ROCK, (t->GetDeltaTime() / m_rocks.size())), m_rocks[i]->getPos());
 		m_rocks[i]->Move(t->GetDeltaTime());
 
 		
 	}
+	// Rock rendering and movement logic
+	/*for (int i = 0; i < m_rocks.size(); i++) {
+		_r->RenderTexture(rockSheet, rockSheet->Update(EN_AN_ROCK, (t->GetDeltaTime() / m_rocks.size())), m_rocks[i]->getPos());
+		m_rocks[i]->Move(t->GetDeltaTime());
+	}*/
 }
 void Level::RunLevel1Logic(Renderer* _r, SpriteSheet* sheet, Timing* t)
 {

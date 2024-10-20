@@ -19,6 +19,16 @@ public:
 	static bool checkCollision(const Rect& a, const Rect& b) {
 		return (a.X1 < b.X2 && a.X2 > b.X1 && a.Y1 < b.Y2 && a.Y2 > b.Y1);
 	}
+	
+	void Die() {
+		m_isAlive = false; // Mark the unit as dead
+	}
+
+	bool IsAlive() const{
+		return m_isAlive;
+	}
+
+
 
 	void setXPos(float _xPos) { m_xPos = _xPos; }
 	void setYPos(float _yPos) { m_yPos = _yPos; }
@@ -48,7 +58,8 @@ public:
 	static ObjectPool<Unit>* Pool;
 
 private:
-
+	bool m_isAlive = true;
+	bool m_inDeathAnimation = false;
 	string m_texture_guid;
 	float m_xPos;
 	float m_yPos;

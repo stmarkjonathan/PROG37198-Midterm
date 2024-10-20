@@ -65,13 +65,14 @@ void GameController::RunGame()
 	}
 	sheet->SetSize(17, 6, 69, 44);
 	sheet->AddAnimation(EN_AN_RUN, 6, 8, 6.0f);
+	sheet->AddAnimation(EN_AN_DEATH, 26, 11, 4.0f);
 
 	rockSheet->SetSize(1, 4, 19, 20);
 	rockSheet->AddAnimation(EN_AN_ROCK, 0, 4, 6.0f);
 	//auto - save the level state after 5 seconds as Level1.bin, immediately load the auto - saved
 	//	level(Level1.bin) and continue level execution
 	bool hasAutoSaved = false;
-	bool isLevel1 = true;
+	bool isLevel1 = false;
 	//main game loop, runs every frame
 	//if 60 frames per second, runs 60 times a second
 	while (m_sdlEvent.type != SDL_QUIT)
