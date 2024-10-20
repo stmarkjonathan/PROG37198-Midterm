@@ -24,6 +24,8 @@ void GameController::RunGame()
 	Renderer* r = &Renderer::Instance();
 	Timing* t = &Timing::Instance();
 	Level* level = new Level(Color(128,128, 128, 255));
+	
+	ofstream stream("resource.bin", ios::out | ios::binary);
 
 	//loads warriors + rocks and initializes their values
 	level->CreateWarriors();
@@ -76,7 +78,10 @@ void GameController::RunGame()
 		//somehow find a way to start with level 1 (only warriors) then switch to level 2 (warriors + rocks) according to a condition
 		level->RunLevelLogic(r, sheet,rockSheet, t);
 
-		
+		if (t->GetGameTime() == 5000)
+		{
+			level->Serialize(stream);
+		}
 
 		string fps = "Frames per Second: " + to_string(t->GetFPS());
 		font->Write(r->GetRenderer(), fps.c_str(), SDL_Color{ 0, 0, 255 }, SDL_Point{ 0, 0 });
